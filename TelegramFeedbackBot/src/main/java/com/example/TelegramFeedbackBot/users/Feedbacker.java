@@ -1,21 +1,30 @@
 package com.example.TelegramFeedbackBot.users;
 
 import com.example.TelegramFeedbackBot.tools.Sender;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
 public class Feedbacker extends User {
     private String questionersID;
+
     private Mode mode = Mode.CHOOSING_QUESTIONER;
+
     private String feedback;
 
     private enum Mode { CHOOSING_QUESTIONER, LEAVING_FEEDBACK, ACCEPTING_SENDING_FEEDBACK}
 
     public Feedbacker() {
+        setNewUserType(UserType.FEEDBACKER);
         String [] commands = {"/change mode", "/change questioner"};
         setCommands(commands);
     }
 
     @Override
-    public void execute(String receivedText) {
+    public boolean userTypeChanged() {
+        return getNewUserType() != UserType.FEEDBACKER;
+    }
+
+    @Override
+    public SendMessage process(String receivedText) {
         if (mode == Mode.CHOOSING_QUESTIONER || receivedText.equals("/change questioner")) {
             choosingQuestioner(receivedText);
         } else if (mode == Mode.ACCEPTING_SENDING_FEEDBACK) {
@@ -23,6 +32,7 @@ public class Feedbacker extends User {
         } else {
             leavingFeedback(receivedText);
         }
+        return null;//
     }
 
     private void choosingQuestioner(String nick) {

@@ -1,5 +1,6 @@
 package com.example.TelegramFeedbackBot;
 
+import com.example.TelegramFeedbackBot.bots.FeedbackBot;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -14,13 +15,13 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 public class Initializer {
 
     @Autowired
-    Bot bot;
+    FeedbackBot feedbackBot;
 
     @EventListener({ContextRefreshedEvent.class})
     public void initialize() throws TelegramApiException {
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
         try {
-            telegramBotsApi.registerBot(bot);
+            telegramBotsApi.registerBot(feedbackBot);
         }
         catch (TelegramApiException e) {
             e.printStackTrace();

@@ -1,6 +1,7 @@
 package com.example.TelegramFeedbackBot.users;
 
 import com.example.TelegramFeedbackBot.tools.Sender;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,12 +11,18 @@ public class Questioner extends User {
     private String nick = null;
 
     public Questioner() {
+        setNewUserType(UserType.QUESTIONER);
         String [] commands = {"/change mode", "/change nickname"};
         setCommands(commands);
     }
 
     @Override
-    public void execute(String command) {
+    public boolean userTypeChanged() {
+        return getNewUserType() != UserType.QUESTIONER;
+    }
+
+    @Override
+    public SendMessage process(String command) {
         Sender sender = new Sender();
         String textToSend;
 
@@ -35,11 +42,10 @@ public class Questioner extends User {
                 textToSend = "unknown command";
         }
         sender.send(textToSend, getChatID(), getCommands());
+        return null;//
     }
 
-    //private static ArrayList<String> nicksOfQuestioners = new ArrayList<>();
     private static Map<String, String> questioners = new HashMap<>(); // [chatID : nick]
 
     public static Map<String, String> getQuestioners() { return questioners; }
-
 }
