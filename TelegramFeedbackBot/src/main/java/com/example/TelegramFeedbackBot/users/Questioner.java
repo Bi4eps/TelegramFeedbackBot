@@ -1,6 +1,6 @@
 package com.example.TelegramFeedbackBot.users;
 
-import com.example.TelegramFeedbackBot.tools.Sender;
+import com.example.TelegramFeedbackBot.tools.SendMessageSetter;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ public class Questioner extends User {
 
     @Override
     public SendMessage process(String command) {
-        Sender sender = new Sender();
+        var mesSetter = new SendMessageSetter();
         String textToSend;
 
         if (nick == null) {
@@ -41,8 +41,7 @@ public class Questioner extends User {
             } else
                 textToSend = "unknown command";
         }
-        sender.send(textToSend, getChatID(), getCommands());
-        return null;//
+        return mesSetter.set(textToSend, getChatID(), getCommands());
     }
 
     private static Map<String, String> questioners = new HashMap<>(); // [chatID : nick]

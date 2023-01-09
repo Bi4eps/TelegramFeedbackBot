@@ -1,6 +1,5 @@
 package com.example.TelegramFeedbackBot.users;
 
-import com.example.TelegramFeedbackBot.tools.Sender;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
 public class Feedbacker extends User {
@@ -36,7 +35,6 @@ public class Feedbacker extends User {
     }
 
     private void choosingQuestioner(String nick) {
-        Sender sender = new Sender();
         String textToSend = null;
 
         for (String el : Questioner.getQuestioners().values()) {
@@ -49,12 +47,10 @@ public class Feedbacker extends User {
         if (textToSend == null) {
             textToSend = "This questioner isn't exist";
         }
-        sender.send(textToSend, getChatID(), getCommands());
+        //sender.send(textToSend, getChatID(), getCommands());
     }
 
     private void leavingFeedback(String feedback) {
-        Sender sender = new Sender();
-        //sender.send("",);
     }
 
     private void acceptingSendingFeedback(String command) {

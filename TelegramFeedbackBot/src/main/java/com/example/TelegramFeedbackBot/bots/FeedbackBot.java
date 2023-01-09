@@ -1,7 +1,6 @@
 package com.example.TelegramFeedbackBot.bots;
 
 import com.example.TelegramFeedbackBot.tools.SendMessageSetter;
-import com.example.TelegramFeedbackBot.tools.Sender;
 import com.example.TelegramFeedbackBot.users.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -28,14 +27,15 @@ public class FeedbackBot extends TelegramLongPollingBot {
             User user = null;
 
             if (usersArr.size() > 0) {
-                for (int i = 0; i < usersArr.size(); i++) {
-                    if (usersArr.get(i).getChatID().equals(this.chatID)) {
-                        user = usersArr.get(i);
+                for (User tempUser : usersArr) {
+                    if (tempUser.getChatID().equals(this.chatID)) {
+                        user = tempUser;
                         userIsSet = true;
                         break;
                     }
                 }
             }
+
 
             if (!userIsSet) {
                 setUser(UserType.DEFAULTUSER);
