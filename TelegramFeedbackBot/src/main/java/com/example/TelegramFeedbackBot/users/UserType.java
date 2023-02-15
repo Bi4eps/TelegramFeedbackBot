@@ -4,4 +4,5 @@ public enum UserType {
     ADMIN,
     QUESTIONER,
     FEEDBACKER,
-    DEFAULTUSER; }
+    DEFAULTUSER; //delete in future
+}
