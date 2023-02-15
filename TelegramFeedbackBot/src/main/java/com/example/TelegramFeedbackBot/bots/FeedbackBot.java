@@ -115,10 +115,10 @@ public class FeedbackBot extends TelegramLongPollingBot {
         }
     }
 
-    @Value("${The_FeedbackBot.name}")
+    @Value("${FeedbackBot.name}")
     private String botName;
 
-    @Value("${The_FeedbackBot.token}")
+    @Value("${FeedbackBot.token}")
     private String botToken;
 
     @Override
