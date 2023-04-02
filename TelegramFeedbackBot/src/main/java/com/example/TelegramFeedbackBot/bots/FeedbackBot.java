@@ -15,17 +15,16 @@ import java.util.ArrayList;
 
 @Component
 public class FeedbackBot extends TelegramLongPollingBot {
-    private Processor processor = new Processor();
 
     private ArrayList<User> usersArr = new ArrayList<>();
 
     @Override
     public void onUpdateReceived(Update update) {
+        Processor processor = new Processor();
         if (update.hasMessage() && update.getMessage().hasText())
             processor.processMessage(update.getMessage());
-        if (update.hasCallbackQuery())
+        else if (update.hasCallbackQuery())
             processor.processCallbackQuery(update.getCallbackQuery());
-
     }
 
     @Value("${FeedbackBot.name}")
@@ -35,15 +34,16 @@ public class FeedbackBot extends TelegramLongPollingBot {
     private String botToken;
 
     @Override
-    public String getBotUsername(){ return botName; }
+    public String getBotUsername() { return botName; }
 
     @Override
     public String getBotToken() { return botToken; }
 
     class Processor {
         private String chatID;
+
         private void processMessage(Message message) {
-            int numInUsersArr = -1; //if -1 -> user isn't in usersArr
+            //int numInUsersArr = -1; //if -1 -> user isn't in usersArr
             String receivedText = message.getText();
             this.chatID = message.getChatId().toString();
             boolean userIsSet = false;
@@ -68,24 +68,22 @@ public class FeedbackBot extends TelegramLongPollingBot {
 
             if (user.userTypeChanged()) {
                 setUser(user.getNewUserType());
-
             }
 
-            boolean defCommand = this.defCommand(receivedText);
+            /*boolean defCommand = this.defCommand(receivedText);
             if (!defCommand) {
                 if (numInUsersArr == -1) {
                     //sender.send("unknown command", this.chatID, "/start");
                 }
-
             } else if (defCommand && !(numInUsersArr == -1) )
-                usersArr.remove(numInUsersArr);
+                usersArr.remove(numInUsersArr);*/
         }
 
         private void processCallbackQuery(CallbackQuery callbackQuery) {}
 
         private void setUser(UserType userType) {
             User user;
-            switch (userType){
+            switch (userType) {
                 case ADMIN -> user = new Admin();
                 case FEEDBACKER -> user = new Feedbacker();
                 case QUESTIONER -> user = new Questioner();
