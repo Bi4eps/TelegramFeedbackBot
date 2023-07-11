@@ -34,10 +34,10 @@ public class FeedbackBot extends TelegramLongPollingBot {
     private String botToken;
 
     @Override
-    public String getBotUsername() { return botName; }
+    public String getBotUsername() { return this.botName; }
 
     @Override
-    public String getBotToken() { return botToken; }
+    public String getBotToken() { return this.botToken; }
 
     class Processor {
         private String chatID;
