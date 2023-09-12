@@ -21,10 +21,8 @@ public class FeedbackBot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         Processor processor = new Processor();
-        if (update.hasMessage() && update.getMessage().hasText())
-            processor.processMessage(update.getMessage());
-        else if (update.hasCallbackQuery())
-            processor.processCallbackQuery(update.getCallbackQuery());
+        if (update.hasMessage() && update.getMessage().hasText()) processor.processMessage(update.getMessage());
+        else if (update.hasCallbackQuery()) processor.processCallbackQuery(update.getCallbackQuery());
     }
 
     @Value("${FeedbackBot.name}")
