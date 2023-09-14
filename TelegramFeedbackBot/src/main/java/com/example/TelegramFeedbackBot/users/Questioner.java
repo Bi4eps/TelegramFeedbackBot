@@ -2,8 +2,6 @@ package com.example.TelegramFeedbackBot.users;
 
 import com.example.TelegramFeedbackBot.tools.SendMessageSetter;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,8 +36,7 @@ public class Questioner extends User {
                 questioners.remove(getChatID());
                 //nicksOfQuestioners.remove(getChatID());
                 textToSend = "Please come up with your nickname, as a questioner";
-            } else
-                textToSend = "unknown command";
+            } else textToSend = "unknown command";
         }
         return mesSetter.set(textToSend, getChatID(), getCommands());
     }

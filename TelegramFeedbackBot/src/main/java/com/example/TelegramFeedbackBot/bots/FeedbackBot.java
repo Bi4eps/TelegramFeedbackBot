@@ -1,6 +1,5 @@
 package com.example.TelegramFeedbackBot.bots;
 
-import com.example.TelegramFeedbackBot.tools.SendMessageSetter;
 import com.example.TelegramFeedbackBot.users.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -21,8 +20,10 @@ public class FeedbackBot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         Processor processor = new Processor();
-        if (update.hasMessage() && update.getMessage().hasText()) processor.processMessage(update.getMessage());
-        else if (update.hasCallbackQuery()) processor.processCallbackQuery(update.getCallbackQuery());
+        if (update.hasMessage() && update.getMessage().hasText())
+            processor.processMessage(update.getMessage());
+        else if (update.hasCallbackQuery())
+            processor.processCallbackQuery(update.getCallbackQuery());
     }
 
     @Value("${FeedbackBot.name}")
@@ -41,7 +42,6 @@ public class FeedbackBot extends TelegramLongPollingBot {
         private String chatID;
 
         private void processMessage(Message message) {
-            //int numInUsersArr = -1; //if -1 -> user isn't in usersArr
             String receivedText = message.getText();
             this.chatID = message.getChatId().toString();
             boolean userIsSet = false;
@@ -64,17 +64,7 @@ public class FeedbackBot extends TelegramLongPollingBot {
 
             user.process(receivedText);
 
-            if (user.userTypeChanged()) {
-                setUser(user.getNewUserType());
-            }
-
-            /*boolean defCommand = this.defCommand(receivedText);
-            if (!defCommand) {
-                if (numInUsersArr == -1) {
-                    //sender.send("unknown command", this.chatID, "/start");
-                }
-            } else if (defCommand && !(numInUsersArr == -1) )
-                usersArr.remove(numInUsersArr);*/
+            if (user.userTypeChanged()) setUser(user.getNewUserType());
         }
 
         private void processCallbackQuery(CallbackQuery callbackQuery) {}
@@ -94,9 +84,9 @@ public class FeedbackBot extends TelegramLongPollingBot {
         private boolean defCommand(String command) {
             String textToSend = null;
             boolean defCommand = true;
-            if (command.equals("/start") || command.equals("/change mode")) {
+            if (command.equals("/start") || command.equals("/change mode"))
                 textToSend = "Please choose the mode";
-            } else {
+            else {
                 switch (command) {
                     case "/start as an admin" -> {
                         setUser(UserType.ADMIN);
@@ -111,9 +101,7 @@ public class FeedbackBot extends TelegramLongPollingBot {
                         setUser(UserType.FEEDBACKER);
                         textToSend = "well";
                     }
-                    default -> {
-                        return false;
-                    }
+                    default -> { return false; }
                 }
             }
             //sender.send(textToSend, this.chatID, this.defCommands);
