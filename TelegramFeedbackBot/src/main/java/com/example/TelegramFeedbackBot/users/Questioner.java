@@ -9,14 +9,8 @@ public class Questioner extends User {
     private String nick = null;
 
     public Questioner() {
-        setNewUserType(UserType.QUESTIONER);
         String [] commands = {"/change mode", "/change nickname"};
         setCommands(commands);
-    }
-
-    @Override
-    public boolean userTypeChanged() {
-        return getNewUserType() != UserType.QUESTIONER;
     }
 
     @Override

@@ -12,14 +12,8 @@ public class Feedbacker extends User {
     private enum Mode { CHOOSING_QUESTIONER, LEAVING_FEEDBACK, ACCEPTING_SENDING_FEEDBACK}
 
     public Feedbacker() {
-        setNewUserType(UserType.FEEDBACKER);
         String [] commands = {"/change mode", "/change questioner"};
         setCommands(commands);
-    }
-
-    @Override
-    public boolean userTypeChanged() {
-        return getNewUserType() != UserType.FEEDBACKER;
     }
 
     @Override

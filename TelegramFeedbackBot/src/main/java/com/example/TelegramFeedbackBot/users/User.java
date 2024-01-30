@@ -11,23 +11,16 @@ public abstract class User {
 
     private String [] commands;
 
-    private UserType newUserType;
-
-    public abstract boolean userTypeChanged();
-
     public String[] getDefCommands() { return defCommands; }
 
     public String getChatID() { return chatID; }
 
     String [] getCommands() { return commands; }
 
-    public UserType getNewUserType() { return newUserType; }
 
     public abstract SendMessage process(String command);
 
     public void setChatID(String id) { this.chatID = id; }
 
     void setCommands(String [] commands) { this.commands = commands; }
-
-    protected void setNewUserType(UserType userType) { this.newUserType = userType; }
 }

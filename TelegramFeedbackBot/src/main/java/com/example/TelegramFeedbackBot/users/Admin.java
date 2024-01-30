@@ -8,14 +8,8 @@ public class Admin extends User {
     private boolean adminAbilitiesActive = false;
 
     public Admin() {
-        setNewUserType(UserType.ADMIN);
         String [] commands = {"/change mode", ""};
         setCommands(commands);
-    }
-
-    @Override
-    public boolean userTypeChanged() {
-        return getNewUserType() != UserType.ADMIN;
     }
 
     @Override

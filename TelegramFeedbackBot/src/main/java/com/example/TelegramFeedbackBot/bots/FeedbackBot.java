@@ -10,20 +10,40 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import javax.security.auth.callback.CallbackHandler;
 import java.util.ArrayList;
 
 @Component
 public class FeedbackBot extends TelegramLongPollingBot {
 
-    private ArrayList<User> usersArr = new ArrayList<>();
+    private ArrayList<User> arrOfUsers = new ArrayList<>();
 
     @Override
     public void onUpdateReceived(Update update) {
-        Processor processor = new Processor();
         if (update.hasMessage() && update.getMessage().hasText())
-            processor.processMessage(update.getMessage());
-        else if (update.hasCallbackQuery())
-            processor.processCallbackQuery(update.getCallbackQuery());
+            processMessage(update.getMessage());
+    }
+
+    private void processMessage(Message message) {
+        String chatID = message.getChatId().toString();
+        if (findUser(chatID) == null) {
+
+        } else {
+            findUser(chatID).process(message.getText());
+        }
+    }
+
+    private User findUser(String chatID) {
+        for (User tempUser : arrOfUsers) {
+            if (tempUser.getChatID().equals(chatID)) {
+                return tempUser;
+            }
+        }
+        return null;
+    }
+
+    private void setUser(String chatID) {
+        //to implement
     }
 
     @Value("${FeedbackBot.name}")
@@ -37,84 +57,4 @@ public class FeedbackBot extends TelegramLongPollingBot {
 
     @Override
     public String getBotToken() { return this.botToken; }
-
-    class Processor {
-        private String chatID;
-
-        private void processMessage(Message message) {
-            String receivedText = message.getText();
-            this.chatID = message.getChatId().toString();
-            boolean userIsSet = false;
-            User user = null;
-
-            if (usersArr.size() > 0) {
-                for (User tempUser : usersArr) {
-                    if (tempUser.getChatID().equals(this.chatID)) {
-                        user = tempUser;
-                        userIsSet = true;
-                        break;
-                    }
-                }
-            }
-
-            if (!userIsSet) {
-                setUser(UserType.DEFAULTUSER);
-                user = usersArr.get(usersArr.size() - 1);
-            }
-
-            user.process(receivedText);
-
-            if (user.userTypeChanged()) setUser(user.getNewUserType());
-        }
-
-        private void processCallbackQuery(CallbackQuery callbackQuery) {}
-
-        private void setUser(UserType userType) {
-            User user;
-            switch (userType) {
-                case ADMIN -> user = new Admin();
-                case FEEDBACKER -> user = new Feedbacker();
-                case QUESTIONER -> user = new Questioner();
-                default -> user = new DefaultUser();
-            }
-            user.setChatID(this.chatID);
-            usersArr.add(user);
-        }
-
-        private boolean defCommand(String command) {
-            String textToSend = null;
-            boolean defCommand = true;
-            if (command.equals("/start") || command.equals("/change mode"))
-                textToSend = "Please choose the mode";
-            else {
-                switch (command) {
-                    case "/start as an admin" -> {
-                        setUser(UserType.ADMIN);
-                        textToSend = "Please enter the admin password \n " +
-                                "If you don't know the password, you can start as another user";
-                    }
-                    case "/start as a questioner" -> {
-                        setUser(UserType.QUESTIONER);
-                        textToSend = "Please come up with your nickname, as a questioner";
-                    }
-                    case "/start as a feedbacker" -> {
-                        setUser(UserType.FEEDBACKER);
-                        textToSend = "well";
-                    }
-                    default -> { return false; }
-                }
-            }
-            //sender.send(textToSend, this.chatID, this.defCommands);
-            return defCommand;
-        }
-
-        private void sendMessage(SendMessage messageToSend) {
-            try {
-                execute(messageToSend);
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
-            }
-        }
-
-    }
 }
